@@ -4,9 +4,9 @@ from PIL import Image
 
 # --- PATH SETTINGS ----
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-css_file = "./styles/main.css"
-profile_file = "./assets/pp.jpg"
-resume_file = "./assets/DonovanAbednego_cv.pdf"
+css_file = "styles/main.css"
+profile_file = "assets/pp.jpg"
+resume_file = "assets/DonovanAbednego_cv.pdf"
 
 # --- GENERAL SETTINGS ----
 PAGE_TITLE = "Digital CV | Donovan Abednego"
