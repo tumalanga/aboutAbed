@@ -9,7 +9,7 @@ css_path = from_root("styles", "main.css")
 # css_file = "styles/main.css"
 css_path = from_root("styles", "main.css")
 # profile_file = "assets/pp.jpg"
-profile_file = from_root("assets", "pp.jpg")
+profile_file = from_root("assets", "me.jpg")
 # resume_file = "assets/DonovanAbednego_cv.pdf"
 resume_file = from_root("assets", "DonovanAbednego_cv.pdf")
 
