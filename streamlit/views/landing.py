@@ -20,8 +20,8 @@ SOCIAL_MEDIA = {"LinkedIn":"linkedin.com/in/dabednego"}
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 # --- CSS, pdf and prof pic ----
-# with open(css_file) as f:
-#     st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+with open(css_file) as f:
+    st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
 with open(resume_file,"rb") as pdf_file:
     PDFbyte = pdf_file.read()
 # profile_pic = Image.open(profile_file)
