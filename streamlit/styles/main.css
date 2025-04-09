@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
+
+* {font-family: "Figtree";}
+
+a {
+    text-decoration: none !important;
+    color: white !important;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: none;
+    color: #4bffff !important;
+}
+
+ul {list-style-type: none;}
+
+hr {
+    margin-top: 0px !important;
+    margin-bottom: 5% !important;
+}
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+/* header {visibility: hidden;} */
