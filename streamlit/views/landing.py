@@ -1,7 +1,9 @@
 from pathlib import Path
 import streamlit as st
 from PIL import Image
+from utils.path_helper import from_root
 
+css_path = from_root("styles", "main.css")
 # --- PATH SETTINGS ----
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 css_file = "styles/main.css"
@@ -20,8 +22,10 @@ SOCIAL_MEDIA = {"LinkedIn":"linkedin.com/in/dabednego"}
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 # --- CSS, pdf and prof pic ----
-with open(css_file) as f:
-    st.markdown("<style>{}</style>".format(f.read()), unsafe_allow_html=True)
+css_path = from_root("styles", "main.css")
+with open(css_path) as f:
+    css = f.read()
+    st.markdown("<style>{}</style>".format(css), unsafe_allow_html=True)
 with open(resume_file,"rb") as pdf_file:
     PDFbyte = pdf_file.read()
 # profile_pic = Image.open(profile_file)
