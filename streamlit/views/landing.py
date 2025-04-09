@@ -6,9 +6,12 @@ from utils.path_helper import from_root
 css_path = from_root("styles", "main.css")
 # --- PATH SETTINGS ----
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
-css_file = "styles/main.css"
-profile_file = "assets/pp.jpg"
-resume_file = "assets/DonovanAbednego_cv.pdf"
+# css_file = "styles/main.css"
+css_path = from_root("styles", "main.css")
+# profile_file = "assets/pp.jpg"
+profile_file = from_root("assets", "pp.jpg")
+# resume_file = "assets/DonovanAbednego_cv.pdf"
+resume_file = from_root("assets", "DonovanAbednego_cv.pdf")
 
 # --- GENERAL SETTINGS ----
 PAGE_TITLE = "Digital CV | Donovan Abednego"
@@ -22,7 +25,6 @@ SOCIAL_MEDIA = {"LinkedIn":"linkedin.com/in/dabednego"}
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 # --- CSS, pdf and prof pic ----
-css_path = from_root("styles", "main.css")
 with open(css_path) as f:
     css = f.read()
     st.markdown("<style>{}</style>".format(css), unsafe_allow_html=True)
@@ -42,7 +44,7 @@ with col2:
     st.download_button(
         label = "Download Resume",
         data=PDFbyte,
-        file_name=resume_file.rsplit('/')[-1],
+        file_name="DonovanAbednego_cv.pdf",
         mime="application/octet-stream"
     )
     st.write("Email",EMAIL)
