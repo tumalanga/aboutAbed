@@ -20,5 +20,8 @@ hr {
     margin-bottom: 5% !important;
 }
 
+button[title="View fullscreen"]{
+    visibility: hidden;}
+
 #MainMenu {visibility: hidden;}
 footer {visibility: hidden;}

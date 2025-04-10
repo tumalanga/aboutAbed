@@ -7,8 +7,8 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 st.write("simple data dashboard")
-st.write("based on: ",)
 
 uploaded_file = st.file_uploader("Chooese a CSV file", type="csv")
 
@@ -38,3 +38,5 @@ if uploaded_file is not None:
         st.line_chart(filtered_df.set_index(x_column)[y_column])
 else:
     st.write("Waiting on file upload")
+
+st.write("built based on: ","https://www.youtube.com/watch?v=2siBrMsqF44")
