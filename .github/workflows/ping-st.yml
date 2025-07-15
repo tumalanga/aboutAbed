@@ -1,0 +1,14 @@
+name: Keep Streamlit App Alive (8-min ping)
+
+on:
+  schedule:
+    - cron: '*/8 * * * *'  # Ping setiap 8 menit UTC
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Streamlit App
+        run: |
+          curl -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
