@@ -64,7 +64,7 @@ st.write("Jun 2023 - Aug 2024 | Bali, Indonesia")
 st.write("""
 - ✔️ Automate Monthly Revenue Reporting, Commission Report, Team Sales Report and Individual commission report for the sales team.
 - ✔️ Maintaining weekly revenue reporting for venue and product to determine which region has the best performance, tracking each sales performance is also possible.
-- ✔️ Reducing data reporting time from 3 working days to just 3 working days.
+- ✔️ Reducing data reporting time from 3 working weeks to just 3 working days.
 - ✔️ Create Dataflow and datamart from the API to data platform. Prepared data from data platform to be distributed into several platforms i.e Google Sheets and Mosaic. Datamart has made data easier to be accessed efficiently by users from 3 hours request into just few minutes.
 - ✔️ Designed and implemented Dataflow and Datamart to optimize data integration from the API to the data platform. Facilitated seamless data preparation and distribution to multiple platforms, including Google Sheets and Mosaic. The deployment of Datamart significantly enhanced data accessibility, reducing request processing time from three hours to just a few minutes.
 - ✔️ Inhouse tools, Databricks and Hubspot to get the data, Google Colab and Google Sheets are our daily day to day tools. Looker is used in order to introducing data to user and help them cater their day to day data needs.""")
