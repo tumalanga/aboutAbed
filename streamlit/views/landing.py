@@ -11,7 +11,7 @@ resume_file = from_root("assets", "DonovanAbednego_cv.pdf")
 NAME = "Donovan Abednego"
 DESCRIPTION = "Seeking opportunities to apply analytical expertise and automation skills in a dynamic professional setting."
 EMAIL = "donovan.abednego@gmail.com"
-SOCIAL_MEDIA = {"My LinkedIn":"linkedin.com/in/dabednego"}
+SOCIAL_MEDIA = {"My LinkedIn":"https://linkedin.com/in/dabednego"}
 
 # --- CSS, pdf and prof pic ----
 with open(resume_file,"rb") as pdf_file:
@@ -44,14 +44,16 @@ for index, (plaftorm,link) in enumerate(SOCIAL_MEDIA.items()):
 st.write("#")
 st.subheader("Experience")
 st.write("---")
-st.write("""- 💼 Experienced in on-site, remote, and hybrid work environments.
+st.write("""
+- 💼 Experienced in on-site, remote, and hybrid work environments.
 - 📈 Passionate about data-driven decision-making and process automation, with a strong focus on optimizing dataflows and reporting through scripting and advanced analytical tools to enhance efficiency.
 - 👟 Skilled in collaborating with clients and stakeholders, managing upward communication, and addressing ad-hoc data requirements to support business objectives.""")
 
 st.write("#")
 st.subheader("Hard Skills")
 st.write("---")
-st.write("""- 🖥️ Programming: Python, SQL, Bigquery
+st.write("""
+- 🖥️ Programming: Python, SQL, Bigquery
 - 💾 Data Visualization: Tableau, Data Studio
 - ⚙️ Other supporting tools: Hubspot, Google Sheets, Google Slides
 - 🔉 Languages: Bahasa Indonesia (native), English (CEFR B2), Mandarin Taiwan (On progress)""")
@@ -71,7 +73,8 @@ st.write("""
 st.write("#")
 st.write("**Tokocrypto | Social Media Data Analyst**")
 st.write("Feb 2022 - Sep 2022 | Jakarta, Indonesia")
-st.write("""- • Automate the flow and analyze the data source to stakeholders and help them to make data driven decisions.
+st.write("""
+- ✔️ Automate the flow and analyze the data source to stakeholders and help them to make data driven decisions.
 - ✔️ Efficiency had been created for company since weekly Work in Progress (WIP) for Social Media and Corporate Communication team has made.
 - ✔️ Cut the process of making weekly report from 5 days to just 3 days. Hence, improving campaign performance and got insides from data team is a big leap for Social Media team.•Used Brandwatch (formerly falcon.io), Google Colab, Google Sheets, Google Slides as daily day to day tools.
 - ✔️ Used Brandwatch (formerly falcon.io), Google Colab, Google Sheets, Google Slides as daily day to day tools.""")
