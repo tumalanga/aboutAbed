@@ -22,7 +22,7 @@ PAGE_ICON = ":wave:"
 NAME = "Donovan Abednego"
 DESCRIPTION = "Seeking opportunities to apply analytical expertise and automation skills in a dynamic professional setting."
 EMAIL = "donovan.abednego@gmail.com"
-SOCIAL_MEDIA = {"LinkedIn":"linkedin.com/in/dabednego"}
+SOCIAL_MEDIA = {"LinkedIn":"https://linkedin.com/in/dabednego"}
 
 # --- header. WAJIB DI ATAS! ----
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
