@@ -2,7 +2,7 @@ name: Keep Streamlit App Alive (8-min ping)
 
 on:
   schedule:
-    - cron: '*/8 * * * *'  # Ping setiap 8 menit UTC
+    - cron: '*/8 * * * *'
   workflow_dispatch:
 
 jobs:
