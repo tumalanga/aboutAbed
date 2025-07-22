@@ -11,4 +11,13 @@ jobs:
     steps:
       - name: Ping Streamlit App
         run: |
-          curl -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
+          echo "=== $(date) ==="
+          echo "Start pinging Streamlit app..."
+
+          # check 303 or not
+          echo "response:"
+          curl -s -D - https://abtabed.streamlit.app -o /dev/null | grep -E "HTTP/|Location:"
+
+          # follow redirect dan ambil status akhir
+          echo -n "Final status code: "
+          curl -L -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
