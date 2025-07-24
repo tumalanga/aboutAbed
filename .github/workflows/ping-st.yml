@@ -9,15 +9,19 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Streamlit App
-        run: |
-          echo "=== $(date) ==="
-          echo "Start pinging Streamlit app..."
+    - name: Ping Streamlit App with Logging
+      run: |
+        echo "=== $(date) ==="
+        echo "Start pinging Streamlit app..."
 
-          # check 303 or not
-          echo "response:"
-          curl -s -D - https://abtabed.streamlit.app -o /dev/null | grep -E "HTTP/|Location:"
+        echo ""
+        echo "1️⃣  Initial HEAD request (no follow):"
+        curl -I https://abtabed.streamlit.app || echo "Initial HEAD failed"
 
-          # follow redirect dan ambil status akhir
-          echo -n "Final status code: "
-          curl -L -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
+        echo ""
+        echo "2️⃣  Verbose GET request with redirect (-L):"
+        curl -L -v -A "Mozilla/5.0" https://abtabed.streamlit.app || echo "Verbose GET failed"
+
+        echo ""
+        echo "3️⃣  Final status code (after redirects):"
+        curl -L -s -o /dev/null -w "%{http_code}\n" https://abtabed.streamlit.app
