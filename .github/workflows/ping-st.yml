@@ -11,4 +11,17 @@ jobs:
     steps:
     - name: Ping Streamlit App with Logging
       run: |
-        curl -L -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
+        echo "=== $(date) ==="
+        echo "Start pinging Streamlit app..."
+
+        echo ""
+        echo "1️⃣  Initial HEAD request (no follow):"
+        curl -I https://abtabed.streamlit.app || echo "Initial HEAD failed"
+
+        echo ""
+        echo "2️⃣  Verbose GET request with redirect (-L):"
+        curl -L -v -A "Mozilla/5.0" https://abtabed.streamlit.app || echo "Verbose GET failed"
+
+        echo ""
+        echo "3️⃣  Final status code (after redirects):"
+        curl -L -s -o /dev/null -w "%{http_code}\n" https://abtabed.streamlit.app
