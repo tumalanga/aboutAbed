@@ -5,10 +5,21 @@ on:
     - cron: '*/8 * * * *'
   workflow_dispatch:
 
+# jobs:
+#   ping:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - name: Ping Streamlit App with Logging
+#       run: |
+#         curl -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-    - name: Ping Streamlit App with Logging
-      run: |
-        curl -s -o /dev/null -w "%{http_code}" https://abtabed.streamlit.app
+      - name: Ping Streamlit with redirect details
+        run: |
+          echo "=== $(date) ==="
+          echo "Start pinging Streamlit app with full redirect chain..."
+
+          curl -v -L -o /dev/null https://abtabed.streamlit.app 2>&1 | grep -E "< HTTP/|< Location:"
