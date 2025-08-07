@@ -22,6 +22,4 @@ jobs:
           echo "=== $(date) ==="
           echo "Start pinging Streamlit app with full redirect chain..."
 
-          curl -s -A "Mozilla/5.0" https://abtabed.streamlit.app
-
-
+          curl -s -D - -A "Mozilla/5.0" https://abtabed.streamlit.app -o /dev/null | grep -Ei "HTTP/|Location:"
