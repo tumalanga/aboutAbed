@@ -120,7 +120,7 @@ st.write("""- ⭐ Huayu Enrichment Scholarship (HES) Recipient""")
 # st.write("#")
 st.write("""**Ministry of Digital Affairs | Digital Innovation Talent Empowerment Program**""")
 st.write("""Sep 2025 - Nov 2025 | Taipei, Taiwan""")
-st.write("""Chose Data Science program, this program includes online courses, project-based learning, and company visits.""")
+st.write("""- Data Science program course. The program included online courses, project-based learning, and company visits.""")
 
 st.write("""**Algoritma Data Science School | Bootcamp Data Analyst and Data Science Using R**""")
 st.write("""Jan 2019 - Mar 2019 | Jakarta, Indonesia""")
