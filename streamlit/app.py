@@ -42,7 +42,12 @@ project_1 = st.Page(
     title="Quick Data Visualisation"
 )
 
+project_2 = st.Page(
+    page="views/yt.py",
+    title="Youtube data"
+)
+
 pg = st.navigation({"info":[about_page],
-                    "Projects": [project_1]
+                    "Projects": [project_1,project_2]
                     })
 pg.run()

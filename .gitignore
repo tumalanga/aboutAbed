@@ -20,3 +20,6 @@ __pycache__/
 
 *.ipynb
 .ipynb_checkpoints/
+streamlit/nyoba2.py
+streamlit/update req with pip_ignore.txt
+streamlit/nyoba.pkl
