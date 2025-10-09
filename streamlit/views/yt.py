@@ -66,6 +66,8 @@ neo = pd.merge(df,latest, left_on="video_id",right_on="video_id", how="left")\
 neo['publish_date'] = pd.to_datetime(neo['publish_date'])
 neo['snapshot_date'] = pd.to_datetime(neo['snapshot_date'])
 
+# body 開始
+st.title("Visualisation - Youtube")
 with st.form("Filtered Data App"):
     st.header("Set Filters")
 
@@ -85,39 +87,81 @@ with st.form("Filtered Data App"):
     
     submitted = st.form_submit_button("Apply Filters")
 
+
 if submitted:
-    min_dat = pd.to_datetime(min_dat).tz_localize("UTC")
-    max_dat = pd.to_datetime(max_dat).tz_localize("UTC")
-    exp = neo[((neo.publish_date>=min_dat)&(neo.publish_date<max_dat))&
-              (neo['lang_gen'].isin(lang))]
-    grouped_tv = exp.groupby(['publish_date']).agg({
-    'video_id': 'nunique'
-    }).reset_index()
-    grouped_tv_ov = grouped_tv.video_id.sum()
-    grouped = exp.groupby(['publish_date', 'video_id', 'title', 'channel_name', 'lang', 'video_tags']).agg({
-    'view_count': 'median',
-    'like_count': 'median',
-    'comment_count': 'median',
-    'country':"count"
-    }).reset_index()
+    if not lang:
+        st.error("please input the language!")
+    if lang:
+        st.success(f"selected language(s): {', '.join(lang)}")
+        min_dat = pd.to_datetime(min_dat)
+        max_dat = pd.to_datetime(max_dat)
+        if min_dat.tzinfo is None:
+            min_dat = min_dat.tz_localize("UTC")
+        else:
+            min_dat = min_dat.tz_convert("UTC")
 
-    # Overview selected data.
-    st.markdown(f"selected language(s): {', '.join(lang)}\ndate: from {min_dat.strftime("%Y/%m/%d")} to {max_dat.strftime("%Y/%m/%d")}")
-    st.write("Country that accessing the language:")
-    st.plotly_chart(px.bar((exp.\
-        groupby(['country_name','language']).agg({
-            'video_id': 'nunique'
-            }).\
-        reset_index().sort_values(by='video_id',ascending=False).head(20).rename(columns={'video_id':'total videos', 'country_name': 'country'})), x='country', y='total videos', color='language').\
-                update_layout(xaxis={'categoryorder':'total descending'}))
+        if max_dat.tzinfo is None:
+            max_dat = max_dat.tz_localize("UTC")
+        else:
+            max_dat = max_dat.tz_convert("UTC")
 
-    st.dataframe(grouped[['publish_date','title','channel_name','view_count','like_count','comment_count','video_id']])
-    
-    # Total Video related
-    st.markdown(f"total video published: {grouped_tv_ov}")
-    st.line_chart(grouped_tv, x="publish_date", y="video_id", color=None)
-# else:
-#     st.subheader("Original Data (Apply filters to see changes)") 
+        exp = neo[((neo.publish_date>=min_dat)&(neo.publish_date<max_dat))&
+                (neo['lang_gen'].isin(lang))]
+        grouped_tv = exp.groupby(['publish_date']).agg({
+        'video_id': 'nunique'
+        }).reset_index()
+        grouped_tv_ov = grouped_tv.video_id.sum()
+        grouped = exp.groupby(['publish_date', 'video_id', 'title', 'channel_name', 'lang', 'video_tags']).agg({
+        'view_count': 'median',
+        'like_count': 'median',
+        'comment_count': 'median',
+        'country':"count"
+        }).reset_index()
+
+        exp_none = neo[(neo['lang_gen'].isin(lang))]
+        grouped_tv_none = exp_none.groupby(['publish_date']).agg({
+        'video_id': 'nunique'
+        }).reset_index()
+        grouped_tv_ov_none = grouped_tv_none.video_id.sum()
+        grouped_none = exp_none.groupby(['publish_date', 'lang']).agg({
+        'video_id': 'nunique',
+        'view_count': 'median',
+        'like_count': 'median',
+        'comment_count': 'median',
+        'country':"count"
+        }).reset_index()
+        
+        if exp.shape[0]>0:
+        # Overview selected data.
+            st.markdown(f"date: from {min_dat.strftime("%Y/%m/%d")} to {max_dat.strftime("%Y/%m/%d")}")
+            st.write("Country that accessing the language:")
+            st.plotly_chart(px.bar((exp.\
+                groupby(['country_name','language']).agg({
+                    'video_id': 'nunique'
+                    }).\
+                reset_index().sort_values(by='video_id',ascending=False).head(20).rename(columns={'video_id':'total videos', 'country_name': 'country'})), x='country', y='total videos', color='language').\
+                        update_layout(xaxis={'categoryorder':'total descending'}))
+
+            st.dataframe(grouped[['publish_date','title','channel_name','view_count','like_count','comment_count','video_id']])
+            # Total Video related
+            st.markdown(f"total video published: {grouped_tv_ov}")
+            st.line_chart(grouped_tv, x="publish_date", y="video_id", color=None)
+
+        else:
+            st.markdown("Search returns zero result. Please refer to the data below:")
+            st.write("Country that accessing the language:")
+            st.plotly_chart(px.bar((exp_none.\
+                groupby(['country_name','language']).agg({
+                    'video_id': 'nunique'
+                    }).\
+                reset_index().sort_values(by='video_id',ascending=False).rename(columns={'video_id':'total videos', 'country_name': 'country'})), x='country', y='total videos', color='language').\
+                        update_layout(xaxis={'categoryorder':'total descending'}))
+
+            st.dataframe(grouped_none[['publish_date','lang','view_count','like_count','comment_count','video_id']].rename(columns={'video_id':'total videos'}))
+            # Total Video related
+            st.markdown(f"total video published: {grouped_tv_ov_none}")
+            st.line_chart(grouped_tv_none, x="publish_date", y="video_id", color=None)
+
 
 st.write("Data References: ","https://www.kaggle.com/datasets/asaniczka/trending-youtube-videos-113-countries/data")
 
