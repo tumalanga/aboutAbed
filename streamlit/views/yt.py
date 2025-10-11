@@ -1,5 +1,5 @@
-import langcodes, datetime, importlib, pycountry, kagglehub, shutil, os
 import streamlit as st
+import langcodes, datetime, importlib, pycountry, kagglehub, shutil, os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -86,7 +86,6 @@ with st.form("Filtered Data App"):
         )
     
     submitted = st.form_submit_button("Apply Filters")
-
 
 if submitted:
     if not lang:

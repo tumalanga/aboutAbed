@@ -47,7 +47,12 @@ project_2 = st.Page(
     title="Youtube data"
 )
 
+project_3 = st.Page(
+    page="views/converter.py",
+    title="Currency Converter"
+)
+
 pg = st.navigation({"info":[about_page],
-                    "Projects": [project_1,project_2]
+                    "Projects": [project_1,project_2, project_3]
                     })
 pg.run()
