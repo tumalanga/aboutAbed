@@ -48,7 +48,7 @@ if submitted:
     forgs["result"] = np.where(forgs[到]/forgs[從]<1,forgs[到]/forgs[從],round(forgs[到]/forgs[從],2))
 
     st.dataframe(forgs[['date','result']].sort_values(by='date',ascending=False))
-    st.line_chart(forgs[forgs['date']>="2020-01-01"][['date','result']], x="date", y="result", color=None)
+    st.line_chart(forgs[forgs['date']>="2016-01-01"][['date','result']], x="date", y="result", color=None)
 
     st.write("Disclaimer: for visualisation purpose only. Basic data was converted from Euro to various currencies.")
     st.write("Data References: ","https://www.kaggle.com/datasets/asaniczka/forex-exchange-rate-since-2004-updated-daily")
