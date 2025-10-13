@@ -1,6 +1,9 @@
 # .\st\scripts\activate
 # streamlit run app.py
 
+# GA tracker
+import streamlit.components.v1 as components
+
 from pathlib import Path
 import streamlit as st
 from PIL import Image
@@ -11,6 +14,8 @@ css_path = from_root("styles", "main.css")
 # current_dir = Path(__file__).parent if "__file__" in locals() else Path.cwd()
 # css_file = "styles/main.css"
 css_path = from_root("styles", "main.css")
+# html tracker
+html_path = from_root("assets", "ga.html")
 # profile_file = "assets/pp.jpg"
 profile_file = from_root("assets", "me.jpg")
 # resume_file = "assets/DonovanAbednego_cv.pdf"
@@ -28,9 +33,14 @@ SOCIAL_MEDIA = {"LinkedIn":"https://linkedin.com/in/dabednego"}
 st.set_page_config(page_title=PAGE_TITLE, page_icon=PAGE_ICON)
 
 # --- CSS, pdf and prof pic ----
-with open(css_path) as f:
+with open(css_path) as f, open(html_path) as r:
+    # ini untuk css
     css = f.read()
     st.markdown("<style>{}</style>".format(css), unsafe_allow_html=True)
+    # ini untuk tracker
+    html_code = r.read()
+    components.html(html_code, height=0)
+
 about_page = st.Page(
     page="views/landing.py",
     title="About Me",
