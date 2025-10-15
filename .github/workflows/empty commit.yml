@@ -2,8 +2,9 @@ name: Empty Commit
 
 on:
   schedule:
-    - cron: '0 */10 * * *'  # Runs every 10 hours
-
+    - cron: '0 */10 * * *'
+  workflow_dispatch:
+    
 jobs:
   empty-commit:
     runs-on: ubuntu-latest
