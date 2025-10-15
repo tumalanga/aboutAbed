@@ -1,4 +1,70 @@
+from playwright.sync_api import sync_playwright
+from datetime import datetime
+import time
+
+APP_URL = "https://abtabed.streamlit.app"
+RETRIES = 3
+WAIT_AFTER_WAKE = 240  # 4 minutes
+
+def ping_streamlit_app():
+    print(f"[{datetime.now()}] 🔄 Checking Streamlit app: {APP_URL}")
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        page = browser.new_page()
+
+        status = "❓ Unknown status"
+        attempt = 0
+
+        while attempt < RETRIES:
+            attempt += 1
+            print(f"\n--- Attempt {attempt}/{RETRIES} ---")
+            page.goto(APP_URL)
+
+            try:
+                # Check if app is asleep
+                asleep = page.locator("text=Zzz").count() > 0 and page.locator("text='yes, get this app back up'").count() > 0
+                if asleep:
+                    print("⚠️ App is asleep. Clicking 'Yes, get this app back up'...")
+                    page.locator("text='yes, get this app back up'").click()
+                    status = "a. App just woke up"
+                    print(status)
+                    print(f"⏳ Waiting {WAIT_AFTER_WAKE//60} minutes for backend...")
+                    time.sleep(WAIT_AFTER_WAKE)
+
+                # Check for elements
+                has_info = page.locator("text=info").count() > 0
+                has_about_me = page.locator("text='About Me'").count() > 0
+
+                if has_info and has_about_me:
+                    if status != "a. App just woke up":
+                        status = "b. App already awake"
+                    print(f"✅ Elements detected: info={has_info}, About Me={has_about_me}")
+                    break  # success, exit retry loop
+                else:
+                    page_content = page.content().lower()
+                    if "zzz" in page_content:
+                        status = "d. App waking up"
+                    else:
+                        status = "c. Only CDN response"
+                    print(f"⚠️ Elements not fully detected. Status: {status}")
+
+            except Exception as e:
+                print(f"❌ Error during page check: {e}")
+                status = "❌ Error"
+
+            if attempt < RETRIES and status not in ["a. App just woke up", "b. App already awake"]:
+                print("⏳ Retrying in 15 seconds...")
+                time.sleep(15)
+
+        browser.close()
+        print(f"\n[{datetime.now()}] Final status after {attempt} attempts: {status}")
+
+if __name__ == "__main__":
+    ping_streamlit_app()
+
 # import requests
+# from bs4 import BeautifulSoup
 # from datetime import datetime
 
 # APP_URL = "https://abtabed.streamlit.app"
@@ -7,131 +73,32 @@
 #     print(f"[{datetime.now()}] 🔄 Pinging {APP_URL} ...")
 
 #     headers = {
-#         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-#                       "AppleWebKit/537.36 (KHTML, like Gecko) "
-#                       "Chrome/122.0.0.0 Safari/537.36",
-#         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#         "Accept-Language": "en-US,en;q=0.5",
-#         "Cache-Control": "no-cache",
-#         "Pragma": "no-cache",
-#         "Upgrade-Insecure-Requests": "1",
-#         "Connection": "keep-alive",
+#         "User-Agent": "Mozilla/5.0",
+#         "Accept": "text/html",
 #     }
 
 #     try:
 #         resp = requests.get(APP_URL, headers=headers, timeout=20)
-#         print(f"Status: {resp.status_code}")
+#         print(f"HTTP Status: {resp.status_code}")
 
-#         # Check for known Streamlit markers
-#         if "about me" in resp.text.lower():
-#             print("✅ App HTML received — backend likely awake.")
+#         soup = BeautifulSoup(resp.text, "html.parser")
+#         # Look for the span that contains "About Me"
+#         found = soup.find(lambda tag: tag.name == "span" and "About Me" in tag.text)
+
+#         if found:
+#             print("✅ App HTML contains 'About Me' — backend likely awake.")
 #         elif "please wait" in resp.text.lower():
-#             print("🕐 App is loading or just waking up.")
+#             print("🕐 App is loading or waking up.")
 #         else:
 #             print("⚠️ Unexpected response. Might be CDN cache only.")
 
 #     except Exception as e:
 #         print(f"❌ Error: {e}")
 
+
 # if __name__ == "__main__":
 #     import time
 #     for i in range(3):
 #         print(f"\nAttempt {i+1}/3")
 #         ping_streamlit()
 #         time.sleep(5)
-
-
-# import requests
-# import websocket
-# from urllib.parse import urlparse
-# from datetime import datetime
-
-# APP_URL = "https://abtabed.streamlit.app"
-
-# def ping_streamlit():
-#     print(f"[{datetime.now()}] 🔄 Pinging {APP_URL} ...")
-#     headsup = {
-#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-#                     "AppleWebKit/537.36 (KHTML, like Gecko) "
-#                     "Chrome/122.0.0.0 Safari/537.36",
-#     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-#     "Accept-Language": "en-US,en;q=0.5",
-#     "Cache-Control": "no-cache",
-#     "Pragma": "no-cache",
-#     "Upgrade-Insecure-Requests": "1",
-#     "Connection": "keep-alive",
-#     }
-    
-#     # Step 1. Send normal HTTP GET
-#     try:
-#         response = requests.get(APP_URL, headers=headsup, timeout=15)
-#         print(f"HTTP Status: {response.status_code}")
-#         if response.status_code != 200:
-#             print("❌ App unreachable.")
-#             return
-#         print("🌐 Frontend reachable.")
-#     except Exception as e:
-#         print(f"❌ HTTP request failed: {e}")
-#         return
-
-#     # Step 2. Extract correct host for WebSocket
-#     parsed = urlparse(APP_URL)
-#     host = parsed.netloc
-#     ws_url = f"wss://{host}/_stcore/stream"
-
-#     print(f"Attempting WebSocket handshake with: {ws_url}")
-
-#     try:
-#         ws = websocket.create_connection(ws_url, timeout=10)
-#         print("✅ WebSocket handshake successful — backend container is awake.")
-#         ws.close()
-#     except Exception as e:
-#         print(f"⚠️ WebSocket connection failed: {e}")
-
-# if __name__ == "__main__":
-#     import time
-
-#     for i in range(3):
-#         print(f"\nAttempt {i+1}/3")
-#         ping_streamlit()
-#         time.sleep(5)
-
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
-
-APP_URL = "https://abtabed.streamlit.app"
-
-def ping_streamlit():
-    print(f"[{datetime.now()}] 🔄 Pinging {APP_URL} ...")
-
-    headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "text/html",
-    }
-
-    try:
-        resp = requests.get(APP_URL, headers=headers, timeout=20)
-        print(f"HTTP Status: {resp.status_code}")
-
-        soup = BeautifulSoup(resp.text, "html.parser")
-        # Look for the span that contains "About Me"
-        found = soup.find(lambda tag: tag.name == "span" and "About Me" in tag.text)
-
-        if found:
-            print("✅ App HTML contains 'About Me' — backend likely awake.")
-        elif "please wait" in resp.text.lower():
-            print("🕐 App is loading or waking up.")
-        else:
-            print("⚠️ Unexpected response. Might be CDN cache only.")
-
-    except Exception as e:
-        print(f"❌ Error: {e}")
-
-
-if __name__ == "__main__":
-    import time
-    for i in range(3):
-        print(f"\nAttempt {i+1}/3")
-        ping_streamlit()
-        time.sleep(5)
