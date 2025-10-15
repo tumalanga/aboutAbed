@@ -50,10 +50,21 @@ APP_URL = "https://abtabed.streamlit.app"
 
 def ping_streamlit():
     print(f"[{datetime.now()}] 🔄 Pinging {APP_URL} ...")
-
+    headsup = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/122.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.5",
+    "Cache-Control": "no-cache",
+    "Pragma": "no-cache",
+    "Upgrade-Insecure-Requests": "1",
+    "Connection": "keep-alive",
+    }
+    
     # Step 1. Send normal HTTP GET
     try:
-        response = requests.get(APP_URL, timeout=15)
+        response = requests.get(APP_URL, headers=headsup, timeout=15)
         print(f"HTTP Status: {response.status_code}")
         if response.status_code != 200:
             print("❌ App unreachable.")
