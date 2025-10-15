@@ -1,29 +1,30 @@
 import requests
+import websocket
+import time
 from datetime import datetime
 
-def ping_streamlit():
-    url = "https://abtabed.streamlit.app"
-    headers = {
-        "User-Agent": "Mozilla/5.0"
-    }
+APP_URL = "https://abtabed.streamlit.app"
 
-    session = requests.Session()
+def ping_streamlit():
+    print(f"[{datetime.now()}] Pinging {APP_URL}")
+    response = requests.get(APP_URL, timeout=15)
+    if response.status_code == 200:
+        print("🌐 Frontend reachable.")
+    else:
+        print("❌ HTTP failed.")
+        return
+
+    # Extract app host (for websocket)
+    host = APP_URL.replace("https://", "").replace("http://", "")
+    ws_url = f"wss://{host}/_stcore/stream"
+
     try:
-        print(f"[{datetime.now()}] 🔄 Pinging {url} ...")
-        response = session.get(url, headers=headers, allow_redirects=True, timeout=20)
-        print(f"Final URL: {response.url}")
-        print(f"Status Code: {response.status_code}")
-        print(f"Response Headers: {response.headers}")
-        print("Success" if response.status_code == 200 else "Failed")
-        # Check for login keyword
-        if "Sign in" in response.text or "streamlitLogin" in response.text:
-            print("⚠️  WARNING: App might be private or redirected to login.")
-        elif "streamlit" in response.text.lower():
-            print("✅ App is up and responding correctly.")
-        else:
-            print("❓ Unexpected response content. App may be loading or unstable.")
+        print(f"🔌 Connecting to WebSocket: {ws_url}")
+        ws = websocket.create_connection(ws_url, timeout=10)
+        print("✅ WebSocket handshake OK — backend container woke up.")
+        ws.close()
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"⚠️ WebSocket connection failed: {e}")
 
 if __name__ == "__main__":
     ping_streamlit()

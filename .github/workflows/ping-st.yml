@@ -1,24 +1,23 @@
-name: Keep Streamlit App Alive (8-min ping)
+name: Keep Streamlit Awake
 
 on:
   schedule:
-    - cron: '* */9 * * *'
+    - cron: '0 * * * *'  # every hour
   workflow_dispatch:
 
 jobs:
-  ping:
+  wakeup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install requests datetime
+        run: pip install requests websocket-client
 
-      - name: Run ping script
-        run: python ping.py
+      - name: Ping Streamlit
+        run: python ping_streamlit_ws.py
