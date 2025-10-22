@@ -1,0 +1,33 @@
+name: Update Forex Pickle
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # runs daily at midnight UTC
+  workflow_dispatch:
+
+jobs:
+  update-pickle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pandas numpy kagglehub
+
+      - name: Run conversion script
+        run: python convert_to_pickle.py
+
+      - name: Commit and push updated pickle
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add streamlit/assets/rates.pkl
+          git commit -m "Update rates.pkl automatically" || echo "No changes to commit"
+          git push
