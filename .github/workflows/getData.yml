@@ -2,7 +2,7 @@ name: Update Forex Pickle
 
 on:
   schedule:
-    - cron: '0 0 * * *' # runs daily at midnight UTC
+    - cron: '15 9 * * *' # runs daily at midnight UTC
   workflow_dispatch:
 
 jobs:
