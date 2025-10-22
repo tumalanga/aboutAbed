@@ -22,7 +22,7 @@ jobs:
         run: pip install pandas numpy kagglehub
 
       - name: Run conversion script
-        run: python convert_to_pickle.py
+        run: python ForExUp.py
 
       - name: Commit and push updated pickle
         run: |
