@@ -29,5 +29,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add streamlit/assets/rates.pkl
-          git commit -m "Update rates.pkl automatically" || echo "No changes to commit"
+          git commit -m "Force update rates.pkl on $(date)" --allow-empty
           git push
