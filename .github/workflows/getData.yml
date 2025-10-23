@@ -2,7 +2,7 @@ name: Update Forex Pickle
 
 on:
   schedule:
-    - cron: '15 9 * * *' # runs daily at midnight UTC
+    - cron: '15 9 * * *'  # daily at 5:15 PM Taiwan time
   workflow_dispatch:
 
 jobs:
@@ -28,7 +28,12 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add -f streamlit/assets/rates.pkl
-          # Only commit if changes exist
-          git diff --cached --quiet || git commit -m "Update rates.pkl automatically on $(date)"
-          git push
+          PICKLE="streamlit/assets/rates.pkl"
+          if [ -f "$PICKLE" ]; then
+              git add -f "$PICKLE"
+              git diff --cached --quiet || git commit -m "Update rates.pkl automatically on $(date)"
+              git push
+          else
+              echo "❌ Pickle file does not exist, skipping commit."
+              exit 1
+          fi
