@@ -25,5 +25,5 @@ streamlit/nyoba2.py
 streamlit/update req with pip_ignore.txt
 streamlit/nyoba.pkl
 streamlit/assets/key.json
-backlog.txt
 streamlit/assets/rates.pkl
+backlog.txt
