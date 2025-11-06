@@ -12,4 +12,4 @@ url_before=f'https://docs.google.com/spreadsheet/ccc?key={gsheetkey}&output=xlsx
 df_before = pd.read_excel(url,sheet_name="Result")
 df_before['options'] = df_before['currency_name']+" ("+df_before['currency']+")"
 
-pd.concat([df_before,df]).to_csv("streamlit/assets/rates.csv", index=False)
+pd.concat([df_before,df]).to_pickle("streamlit/assets/rates.pkl", index=False)
