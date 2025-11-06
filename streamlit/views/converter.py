@@ -6,8 +6,10 @@ import numpy as np
 from utils.path_helper import from_root
 
 # fundamentals
-file = from_root("assets/", "rates.csv")
+file = from_root("assets/", "rates.pkl")
 rates = pd.read_pickle(file).sort_values(by='currency',ascending=True)
+# file = from_root("assets/", "rates.csv")
+# rates = pd.read_csv(file).sort_values(by='currency',ascending=True)
 # rates['options'] = rates['currency_name']+" ("+rates['currency']+")"
 dari = rates['options'].unique()
 ke = rates['options'].unique()
