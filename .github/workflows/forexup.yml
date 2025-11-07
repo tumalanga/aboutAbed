@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install pandas numpy kagglehub
+          pip install -r streamlit/requirements.txt
 
       - name: Run forex data script
         run: |
