@@ -1,22 +1,46 @@
-name: Update Forex Rates CSV
+name: Auto Update Forex Rates
+
 on:
   schedule:
-    - cron: '0 0 * * *'  # runs every day at midnight UTC
-  workflow_dispatch:
+    - cron: "0 10 * * *"  # Runs daily at 1 UTC
+  workflow_dispatch:      # Allow manual trigger from GitHub Actions tab
 
 jobs:
-  update:
+  update-forex:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: pip install -r streamlit/requirements.txt
-      - run: python forexup.py
-      - run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add streamlit/assets/rates.pkl
-          git commit -m "Auto update forex rates CSV" || echo "No changes to commit"
-          git push
+
+      - name: Install dependencies
+        run: |
+          pip install pandas numpy kagglehub
+
+      - name: Run forex data script
+        run: |
+          python forexup.py
+
+      - name: Commit and push updates
+        run: |
+          # Configure Git identity
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Fetch the latest version of the current branch
+          git fetch origin ${{ github.ref_name }}
+
+          # Stage and commit the new pickle file (if exists)
+          git add assets/*.pkl || echo "No PKL files to add."
+          git commit -m "Auto update forex rates PKL" || echo "No changes to commit."
+
+          # Rebase to avoid conflicts and push back to the same branch
+          git pull --rebase origin ${{ github.ref_name }}
+          git push origin ${{ github.ref_name }}
