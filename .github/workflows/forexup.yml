@@ -38,7 +38,7 @@ jobs:
           git fetch origin ${{ github.ref_name }}
 
           # Stage and commit the new pickle file (if exists)
-          git add assets/*.pkl || echo "No PKL files to add."
+          git add streamlit/assets/*.pkl || echo "No PKL files to add."
           git commit -m "Auto update forex rates PKL" || echo "No changes to commit."
 
           # Rebase to avoid conflicts and push back to the same branch
