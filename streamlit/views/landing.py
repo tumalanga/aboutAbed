@@ -12,6 +12,7 @@ NAME = "Donovan Abednego"
 DESCRIPTION = "Seeking opportunities to apply analytical expertise and automation skills in a dynamic professional setting."
 EMAIL = "donovan.abednego@gmail.com"
 SOCIAL_MEDIA = {"My LinkedIn":"https://linkedin.com/in/dabednego"}
+EMAIL_LINK = "mailto:donovan.abednego@gmail.com"
 
 # --- CSS, pdf and prof pic ----
 with open(resume_file,"rb") as pdf_file:
@@ -26,21 +27,24 @@ with col2:
     st.title(NAME)
     st.write(DESCRIPTION)
 
+    st.markdown(f"""
+    <a href="{SOCIAL_MEDIA['My LinkedIn']}" target="_blank" style="color:#0077B5; text-decoration:none; font-weight:bold;">
+        LinkedIn
+    </a>
+    |
+    <a href="{EMAIL_LINK}" target="_blank" style="color:#0077B5; text-decoration:none; font-weight:bold;">
+        Keep in Touch
+    </a>
+    """, unsafe_allow_html=True)
+
     st.download_button(
         label = "Download Resume",
         data=PDFbyte,
         file_name=str(from_root("assets", "DonovanAbednego_cv.pdf")).replace("\\","/").split("/")[-1],
         mime="application/octet-stream"
     )
-    st.write("Email",EMAIL)
 
-# ---Social Links ----
-st.write("#")
-cols = st.columns(len(SOCIAL_MEDIA))
-for index, (plaftorm,link) in enumerate(SOCIAL_MEDIA.items()):
-    cols[index].write(f"[{plaftorm}]({link})")
-
-st.write("#")
+# st.write("#")
 st.subheader("Experience")
 st.write("---")
 st.write("""
