@@ -27,3 +27,6 @@ streamlit/nyoba.pkl
 streamlit/assets/key.json
 # streamlit/assets/rates.pkl
 backlog.txt
+
+*.png
+*.vcf
