@@ -18,6 +18,6 @@ keep = pd.concat([df_before,df])
 finals = pd.merge(keep.rename(columns={'currency_name':'target'}),get_name[['currency','currency_name']], on='currency')\
     [['date', 'currency', 'base_currency', 'currency_name', 'exchange_rate']]
 finals['options'] = finals['currency_name']+" ("+finals['currency']+")"
-finals.to_pickle("streamlit/assets/rates.pkl")
+finals.sort_values(by='date', ascending = False).to_pickle("streamlit/assets/rates.pkl")
 
 print(f"Pickle created with {finals[['currency']].drop_duplicates().shape[0]} currencies (fiat and crypto)")
