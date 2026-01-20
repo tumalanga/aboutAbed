@@ -4,7 +4,7 @@ import time
 
 APP_URL = "https://abtabed.streamlit.app"
 RETRIES = 3
-WAIT_AFTER_WAKE = 240  # 4 minutes
+WAIT_AFTER_WAKE = 240
 
 def ping_streamlit_app():
     print(f"[{datetime.now()}] 🔄 Checking Streamlit app: {APP_URL}")
@@ -62,43 +62,3 @@ def ping_streamlit_app():
 
 if __name__ == "__main__":
     ping_streamlit_app()
-
-# import requests
-# from bs4 import BeautifulSoup
-# from datetime import datetime
-
-# APP_URL = "https://abtabed.streamlit.app"
-
-# def ping_streamlit():
-#     print(f"[{datetime.now()}] 🔄 Pinging {APP_URL} ...")
-
-#     headers = {
-#         "User-Agent": "Mozilla/5.0",
-#         "Accept": "text/html",
-#     }
-
-#     try:
-#         resp = requests.get(APP_URL, headers=headers, timeout=20)
-#         print(f"HTTP Status: {resp.status_code}")
-
-#         soup = BeautifulSoup(resp.text, "html.parser")
-#         # Look for the span that contains "About Me"
-#         found = soup.find(lambda tag: tag.name == "span" and "About Me" in tag.text)
-
-#         if found:
-#             print("✅ App HTML contains 'About Me' — backend likely awake.")
-#         elif "please wait" in resp.text.lower():
-#             print("🕐 App is loading or waking up.")
-#         else:
-#             print("⚠️ Unexpected response. Might be CDN cache only.")
-
-#     except Exception as e:
-#         print(f"❌ Error: {e}")
-
-
-# if __name__ == "__main__":
-#     import time
-#     for i in range(3):
-#         print(f"\nAttempt {i+1}/3")
-#         ping_streamlit()
-#         time.sleep(5)

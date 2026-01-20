@@ -8,9 +8,6 @@ from utils.path_helper import from_root
 # fundamentals
 file = from_root("assets/", "rates.pkl")
 rates = pd.read_pickle(file).sort_values(by='currency',ascending=True)
-# file = from_root("assets/", "rates.csv")
-# rates = pd.read_csv(file).sort_values(by='currency',ascending=True)
-# rates['options'] = rates['currency_name']+" ("+rates['currency']+")"
 dari = rates['options'].unique()
 ke = rates['options'].unique()
 
@@ -52,5 +49,10 @@ if submitted_01:
     st.dataframe(forgs[(forgs['date']>=forgs['date'].min()) & (forgs['date']<=forgs['date'].max())][['date','result']].sort_values(by='date',ascending=False))
     st.line_chart(forgs[forgs['date']>="2016-01-01"][['date','result']], x="date", y="result", color=None)
 
-    st.write("Disclaimer: for visualisation purpose only. Basic currency was converted from Euro to various currencies during that day.")
-    st.write("Data References: ","https://www.kaggle.com/datasets/asaniczka/forex-exchange-rate-since-2004-updated-daily")
+    st.write("Disclaimer: for visualisation purpose only. Basic currency was converted from Euro everyday.")
+    st.markdown(
+    "Data References (for data showed before November 2025): "
+    "[Kaggle](https://www.kaggle.com/datasets/asaniczka/forex-exchange-rate-since-2004-updated-daily)")
+    st.markdown(
+    "Data References (for data showed from November 2025): "
+    "[Currbeacon](https://currencybeacon.com/)")
