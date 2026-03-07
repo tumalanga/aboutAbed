@@ -59,11 +59,19 @@ st.write("""
 - 🖥️ Programming: Python, SQL, Bigquery
 - 💾 Data Visualization: Tableau, Data Studio
 - ⚙️ Other supporting tools: Hubspot, Google Sheets, Google Slides
-- 🔉 Languages: Bahasa Indonesia (native), English (CEFR B2), Mandarin Taiwan (Basic Proficiency)""")
+- 🔉 Languages: Bahasa Indonesia (Native), English (CEFR B2), Mandarin Taiwan (Basic Proficiency)""")
 
 st.write("#")
 st.subheader("Working Experience")
 st.write("---")
+st.write("**NTNU | Research Assistant**")
+st.write("January 2026 - Present | Taipei, Taiwan")
+st.write("""
+- •	Assisting Professor creating some program to help analysis and make time efficiency.
+- •	Using Python to create image resize script, and Fine-tuning for LLM to create a generated game description based on genre.
+""")
+
+st.write("#")
 st.write("**Liven PTY LTD | Data Analyst**")
 st.write("Jun 2023 - Aug 2024 | Bali, Indonesia")
 st.write("""

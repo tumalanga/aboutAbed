@@ -1,64 +1,93 @@
-from playwright.sync_api import sync_playwright
-from datetime import datetime
 import time
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.chrome import ChromeDriverManager
 
-APP_URL = "https://abtabed.streamlit.app"
-RETRIES = 3
-WAIT_AFTER_WAKE = 240
 
-def ping_streamlit_app():
-    print(f"[{datetime.now()}] 🔄 Checking Streamlit app: {APP_URL}")
+TARGET_URL = "https://abtabed.streamlit.app/"
+SLEEP_KEYWORD = "This app has gone to sleep due to inactivity. Would you like to wake it back up?"
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
 
-        status = "❓ Unknown status"
-        attempt = 0
+def ping():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--start-maximized")
+    # Uncomment untuk mode headless (tanpa tampilan browser):
+    options.add_argument("--headless")
 
-        while attempt < RETRIES:
-            attempt += 1
-            print(f"\n--- Attempt {attempt}/{RETRIES} ---")
-            page.goto(APP_URL)
+    print("🚀 Membuka browser...")
+    driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()),
+        options=options
+    )
 
-            try:
-                # Check if app is asleep
-                asleep = page.locator("text=Zzz").count() > 0 and page.locator("text='yes, get this app back up'").count() > 0
-                if asleep:
-                    print("⚠️ App is asleep. Clicking 'Yes, get this app back up'...")
-                    page.locator("text='yes, get this app back up'").click()
-                    status = "a. App just woke up"
-                    print(status)
-                    print(f"⏳ Waiting {WAIT_AFTER_WAKE//60} minutes for backend...")
-                    time.sleep(WAIT_AFTER_WAKE)
+    try:
+        # Step 1: Akses URL target
+        print(f"🌐 Mengakses {TARGET_URL}...")
+        driver.get(TARGET_URL)
 
-                # Check for elements
-                has_info = page.locator("text=info").count() > 0
-                has_about_me = page.locator("text='About Me'").count() > 0
+        print("⏳ Menunggu 10 detik...")
+        time.sleep(10)
 
-                if has_info and has_about_me:
-                    if status != "a. App just woke up":
-                        status = "b. App already awake"
-                    print(f"✅ Elements detected: info={has_info}, About Me={has_about_me}")
-                    break  # success, exit retry loop
-                else:
-                    page_content = page.content().lower()
-                    if "zzz" in page_content:
-                        status = "d. App waking up"
-                    else:
-                        status = "c. Only CDN response"
-                    print(f"⚠️ Elements not fully detected. Status: {status}")
+        # Step 2: Cek apakah app sedang tidur
+        page_source = driver.page_source
 
-            except Exception as e:
-                print(f"❌ Error during page check: {e}")
-                status = "❌ Error"
+        if SLEEP_KEYWORD not in page_source:
+            print("❌ tidak ditemukan")
+            f_body_text = driver.find_element(By.TAG_NAME, "body").text.strip()
+            f_words = f_body_text.split()
+            f_first_word = f_words[0] if f_words else "(kosong)"
 
-            if attempt < RETRIES and status not in ["a. App just woke up", "b. App already awake"]:
-                print("⏳ Retrying in 15 seconds...")
-                time.sleep(15)
+            print(f"\n📄 Cuplikan teks halaman : {f_body_text[:200]}...")
+            print(f"🏆 Kata pertama           : {f_first_word}")
+            return
 
-        browser.close()
-        print(f"\n[{datetime.now()}] Final status after {attempt} attempts: {status}")
+        print("✅ App sedang tidur, ditemukan pesan wakeup!")
+        print("🖱️  Mencari tombol wakeup...")
+
+        # Coba cari tombol via data-testid dulu, fallback ke teks tombol
+        try:
+            wakeup_btn = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, '[data-testid="wakeup-button-viewer"]')
+                )
+            )
+        except Exception:
+            print("⚠️  data-testid tidak ditemukan, mencari via teks tombol...")
+            wakeup_btn = WebDriverWait(driver, 10).until(
+                EC.element_to_be_clickable(
+                    (By.XPATH, '//button[contains(., "Yes, get this app back up")]')
+                )
+            )
+
+        wakeup_btn.click()
+        print("✅ Tombol wakeup berhasil diklik!")
+
+        # Step 3: Tunggu ~1 menit agar app menyala kembali
+        print("⏳ Menunggu 60 detik agar app kembali aktif...")
+        for i in range(60, 0, -10):
+            print(f"   ... {i} detik lagi")
+            time.sleep(10)
+        print("✅ Selesai menunggu!")
+
+        # Step 4: Scrape kata pertama yang muncul di halaman
+        # Ambil semua teks yang terlihat, ambil kata paling pertama
+        body_text = driver.find_element(By.TAG_NAME, "body").text.strip()
+        words = body_text.split()
+        first_word = words[0] if words else "(kosong)"
+
+        print(f"\n📄 Cuplikan teks halaman : {body_text[:200]}...")
+        print(f"🏆 Kata pertama           : {first_word}")
+
+    except Exception as e:
+        print(f"⚠️  Terjadi error: {e}")
+
+    finally:
+        print("\n🛑 Menutup browser & menghentikan program.")
+        driver.quit()
+
 
 if __name__ == "__main__":
-    ping_streamlit_app()
+    ping()
