@@ -13,9 +13,13 @@ SLEEP_KEYWORD = "This app has gone to sleep due to inactivity. Would you like to
 
 def ping():
     options = webdriver.ChromeOptions()
-    options.add_argument("--start-maximized")
-    # Uncomment untuk mode headless (tanpa tampilan browser):
+    # options.add_argument("--start-maximized")
+    # # Uncomment untuk mode headless (tanpa tampilan browser):
     options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.binary_location = "/usr/bin/chromium-browser"
 
     print("🚀 Membuka browser...")
     driver = webdriver.Chrome(
