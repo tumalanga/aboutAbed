@@ -63,7 +63,7 @@ project_3 = st.Page(
 )
 
 project_x = st.Page(
-    page="views/pplres_1.py",
+    page="pages/pplres_1.py",
     title="Survey Report", visibility="hidden"
 )
 
