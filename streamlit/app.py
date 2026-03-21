@@ -62,7 +62,13 @@ project_3 = st.Page(
     title="Currency Converter"
 )
 
+project_x = st.Page(
+    page="views/pplres_1.py",
+    title="Survey Report", visibility="hidden"
+)
+
 pg = st.navigation({"info":[about_page],
-                    "Projects": [project_1,project_2, project_3]
+                    "Projects": [project_1,project_2, project_3],
+                    "others": [project_x]
                     })
 pg.run()
