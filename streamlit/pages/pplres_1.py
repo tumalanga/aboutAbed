@@ -40,7 +40,7 @@ longr['groups'] = np.where((longr['whiteshirt']==1) & (longr['friendly']==1),"Fr
             np.where((longr['whiteshirt']==0) & (longr['friendly']==1),"Friendly Blue T-shirt",
                         np.where((longr['whiteshirt']==0) & (longr['friendly']==0),"Normal Blue T-shirt","Other"))))
 
-longr_parti = longr.groupby(['resp_id', 'participant_id', 'username', 'date_registered', 'user_ip', 'user_agent',
+longr_parti = longr.groupby(['resp_id', 'participant_id', 'username', 'date_registered', 'user_ip', 'user_agent', 'user_lang',
        'user_race', 'user_gender', 'user_age', 'user_email', 'user_country', 'user_gen']).agg(
     score_race=pd.NamedAgg(column="res_race", aggfunc="sum"),
     score_age=pd.NamedAgg(column="res_age", aggfunc="sum"),
@@ -69,18 +69,32 @@ st.write(
     total=pd.NamedAgg(column="user_gen", aggfunc="count"),
     ).reset_index().sort_values(by=['user_country','user_gen', "user_gender"]))
 
-st.title("Exploration")
-cou = st.multiselect(
-    "Select respondent's country:",
-    longr['user_country'].unique(),
-    default=None,
-)
+with st.form("Filtered App 01 currency"):
+    st.title("Exploration")
+    col1, col2 = st.columns([1, 1])
 
-if not cou:
-    st.error("please input the Country")
-if cou:
-    target = longr_parti[longr_parti['user_country'].isin(cou)]
-    exp = longr[longr['user_country'].isin(cou)]
+
+    with col1:
+        cou = st.multiselect(
+            "Select respondent's country:",
+            longr['user_country'].unique(),
+            default=None,
+        )
+
+    with col2:
+        lang = st.multiselect(
+            "Select respondent's language:",
+            longr['user_lang'].unique(),
+            default=None,
+        )
+
+    submitted_01 = st.form_submit_button("Apply Filters")
+
+if submitted_01:
+    st.write(f"selected country(ies): {', '.join(cou)}")
+    st.write(f"selected language(s): {', '.join(lang)}")
+    target = longr_parti[(longr_parti['user_country'].isin(cou)) & (longr_parti['user_lang'].isin(lang))]
+    exp = longr[(longr['user_country'].isin(cou)) & (longr['user_lang'].isin(lang))]
 
     exp_stats = exp[['resp_id', 'participant_id', 'pic',
                     'answer_race', 'answer_gender', 'answer_age',
@@ -93,58 +107,46 @@ if cou:
     st.write("Top 20 'friendly' photos")
     friendly = exp.groupby(['pic',
         # 'actual_race', 'actual_gender',
-        'actual_age', 'friendly', 'whiteshirt',
-        'race_black', 'race_white', 'race_asian', 'gender_male']).agg(
-    total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
-    score_race=pd.NamedAgg(column="res_race", aggfunc="sum"),
-    score_age=pd.NamedAgg(column="res_age", aggfunc="sum"),
-    score_gender=pd.NamedAgg(column="res_gender", aggfunc="sum"),
-    # stimulus_mode=pd.NamedAgg(column="stimulus", aggfunc=pd.Series.mode),
-    attract=pd.NamedAgg(column="attract", aggfunc="median"),
+        # 'actual_age', 'friendly', 'whiteshirt',
+        # 'race_black', 'race_white', 'race_asian', 'gender_male'
+    ]).agg(
     attract_avg=pd.NamedAgg(column="attract", aggfunc="mean"),
-    attract_sum=pd.NamedAgg(column="attract", aggfunc="sum")
+    score_age_avg=pd.NamedAgg(column="res_age", aggfunc="mean"),
+    total_appeared=pd.NamedAgg(column="pic", aggfunc="count")
+    # score_race=pd.NamedAgg(column="res_race", aggfunc="sum"),
+    # score_gender=pd.NamedAgg(column="res_gender", aggfunc="sum"),
+    # stimulus_mode=pd.NamedAgg(column="stimulus", aggfunc=pd.Series.mode),
+    # attract=pd.NamedAgg(column="attract", aggfunc="median"),
+    # attract_sum=pd.NamedAgg(column="attract", aggfunc="sum")
     ).reset_index().sort_values(by='attract_avg', ascending = False)
     st.bar_chart(friendly.head(20),
-                x='pic', y='attract_avg', stack=False, sort='-attract_avg')
+                x='pic', y='attract_avg', stack=False, sort='-attract_avg',horizontal=True)
     st.write(friendly.head(20))
 
     st.write("Groups")
+    # Create groups
     groups = exp.groupby(['groups']).agg(
+    score_age_avg=pd.NamedAgg(column="res_age", aggfunc="mean"),
     total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
-    score_race=pd.NamedAgg(column="res_race", aggfunc="sum"),
-    score_age=pd.NamedAgg(column="res_age", aggfunc="sum"),
-    score_gender=pd.NamedAgg(column="res_gender", aggfunc="sum"),
-    # stimulus_mode=pd.NamedAgg(column="stimulus", aggfunc=pd.Series.mode),
-    attract=pd.NamedAgg(column="attract", aggfunc="median"),
-    attract_avg=pd.NamedAgg(column="attract", aggfunc="mean"),
-    attract_sum=pd.NamedAgg(column="attract", aggfunc="sum")
-    ).reset_index().sort_values(by='attract_avg', ascending = False)
+    attract_avg=pd.NamedAgg(column="attract", aggfunc="mean")
+    ).reset_index().sort_values(by='score_age_avg', ascending = True)
+
+    # gather data which score_age_avg close to 0.
+    groups_below_0 = groups[groups['score_age_avg']<=0].sort_values(by='score_age_avg', ascending=False).head(1)
+    groups_below_0['score_age_avg'] = abs(groups_below_0['score_age_avg'])
+    groups_above_0 = groups[groups['score_age_avg']>=0].sort_values(by='score_age_avg', ascending=True).head(1)
+    groups_0 = pd.concat([groups_below_0,groups_above_0]).sort_values(by='score_age_avg', ascending=True)
 
     st.bar_chart(groups,
-    x='groups', y='attract_avg', stack=False, sort='-attract_avg',horizontal=True)
+    x='groups', y='score_age_avg', stack=False, sort='-score_age_avg',horizontal=True)
     st.write(groups)
 
-    st.write("Age overview")
-    st.write(
-    exp.groupby(['actual_age']).agg(
-    total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
-    score_age=pd.NamedAgg(column="res_age", aggfunc="sum"),
-    score_age_mean=pd.NamedAgg(column="res_age", aggfunc="mean"),
-    attract=pd.NamedAgg(column="attract", aggfunc="median"),
+    group_race_age = exp[exp['groups']==groups_0.iloc[0,0]].groupby(['groups','actual_race','actual_age']).agg(
     attract_avg=pd.NamedAgg(column="attract", aggfunc="mean"),
-    attract_sum=pd.NamedAgg(column="attract", aggfunc="sum")
-    ).reset_index().sort_values(by='score_age', ascending = False))
+    total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
+    score_age_avg=pd.NamedAgg(column="res_age", aggfunc="mean"),
+    ).reset_index().sort_values(by='attract_avg', ascending = False)
 
-    st.write("Adding races to support age variable")
-    st.write(
-    exp.groupby(['actual_age','actual_race']).agg(
-    total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
-    # score_race=pd.NamedAgg(column="res_race", aggfunc="sum"),
-    score_age=pd.NamedAgg(column="res_age", aggfunc="sum"),
-    score_age_mean=pd.NamedAgg(column="res_age", aggfunc="mean"),
-    # score_gender=pd.NamedAgg(column="res_gender", aggfunc="sum"),
-    # stimulus_mode=pd.NamedAgg(column="stimulus", agg func=pd.Series.mode),
-    attract=pd.NamedAgg(column="attract", aggfunc="median"),
-    attract_avg=pd.NamedAgg(column="attract", aggfunc="mean"),
-    attract_sum=pd.NamedAgg(column="attract", aggfunc="sum")
-    ).reset_index().sort_values(by='score_age', ascending = False))
+    # st.bar_chart(group_race_age,
+    # x='groups', y='attract_avg', stack=False, sort='-attract_avg',horizontal=True)
+    st.write(group_race_age)

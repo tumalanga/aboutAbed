@@ -68,7 +68,9 @@ st.write("**NTNU | Research Assistant**")
 st.write("January 2026 - Present | Taipei, Taiwan")
 st.write("""
 - •	Assisting Professor creating some program to help analysis and make time efficiency.
-- •	Using Python to create image resize script, and Fine-tuning for LLM to create a generated game description based on genre.
+- •	Create image resizing in order to make some time efficiency for loading the picture. Reducing the image sizes had reduced the waiting time users around 1-2 seconds.
+- •	Preprocessing data, do some test and create visualization to help users observe the data based on Streamlit dashboard.
+- •	Fine-tuning to make Inference LLM which could generate video game description.
 """)
 
 st.write("#")
