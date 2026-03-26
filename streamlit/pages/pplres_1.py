@@ -9,10 +9,11 @@ from utils.path_helper import from_root
 # with open("service_account.json") as f:
 #     creds = json.load(f)
 # gc = gspread.service_account_from_dict(creds)
+
+# file_parti = gc.open_by_key("1Yf04qCVa6HFD9fAheUteEL1rYZ6cfzmaDKmjDKYbizo").get_worksheet_by_id("1831253139")
+# parti = pd.DataFrame(file_parti.get_all_records())
 file_parti = from_root("data/", "participants.csv")
 parti = pd.read_csv(file_parti)
-file_parti = gc.open_by_key("1Yf04qCVa6HFD9fAheUteEL1rYZ6cfzmaDKmjDKYbizo").get_worksheet_by_id("1831253139")
-parti = pd.DataFrame(file_parti.get_all_records())
 parti = parti[['id', 'username', 'date_regd', 'user_ip', 'user_ag', 'user_lang',
        'user_country', 'email', 'age', 'gender', 'race', 'time_completed']]
 parti.columns = ['participant_id', 'username', 'date_registered', 'user_ip', 'user_agent', 'user_lang',
