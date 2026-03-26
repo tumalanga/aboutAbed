@@ -11,7 +11,7 @@ from utils.path_helper import from_root
 creds = json.loads(st.secrets["gcp_service_account"])
 gc = gspread.service_account_from_dict(creds)
 
-file_parti = gc.open_by_key("1Yf04qCVa6HFD9fAheUteEL1rYZ6cfzmaDKmjDKYbizo").get_worksheet_by_id("1831253139")
+file_parti = gc.open_by_key(st.secrets["pplres_1"]).get_worksheet_by_id(st.secrets["pplres_1_file_parti"])
 parti = pd.DataFrame(file_parti.get_all_records())
 # file_parti = from_root("data/", "participants.csv")
 # parti = pd.read_csv(file_parti)
@@ -20,7 +20,7 @@ parti = parti[['id', 'username', 'date_regd', 'user_ip', 'user_ag', 'user_lang',
 parti.columns = ['participant_id', 'username', 'date_registered', 'user_ip', 'user_agent', 'user_lang',
        'user_country', 'user_email', 'user_age', 'user_gender', 'user_race', 'time_completed']
 
-file_resp = gc.open_by_key("1Yf04qCVa6HFD9fAheUteEL1rYZ6cfzmaDKmjDKYbizo").get_worksheet_by_id("2060541709")
+file_resp = gc.open_by_key(st.secrets["pplres_1"]).get_worksheet_by_id(st.secrets["pplres_1_file_resp"])
 resp_x = pd.DataFrame(file_resp.get_all_records())
 # file_resp = from_root("data/", "responses.csv")
 # resp_x = pd.read_csv(file_resp)
