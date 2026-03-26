@@ -60,7 +60,7 @@ longr_parti = longr.groupby(['resp_id', 'participant_id', 'username', 'date_regi
 ).reset_index()
 
 st.title("Demography")
-st.markdown(f"""Total survey from 3 countries: {longr_parti.shape[0]}\n
+st.markdown(f"""Total survey from 3 countries: {longr_parti[longr_parti['user_country']!='Other'].shape[0]}\n
 Germany: {longr_parti[longr_parti['user_country']=='Germany'].shape[0]}\n
 Taiwan: {longr_parti[longr_parti['user_country']=='Taiwan'].shape[0]}\n
 Vietnam: {longr_parti[longr_parti['user_country']=='Vietnam'].shape[0]}\n
@@ -69,7 +69,7 @@ st.write("""Data Demography \n
          reference: https://www.beresfordresearch.com/age-range-by-generation/
 """)
 # Use Barchart 我覺得比較好
-demo = longr_parti.copy()
+demo = longr_parti[longr_parti['user_country']!='Other'].copy()
 demo['user_age'] = demo['user_age'].replace('na', np.nan).astype(float)
 st.bar_chart(demo[['user_country','user_gen']].groupby(['user_country','user_gen']).agg(
     total=pd.NamedAgg(column="user_gen", aggfunc="count"),
