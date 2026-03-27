@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 from utils.path_helper import from_root
 from scipy import stats
 import plotly.figure_factory as ff
+import plotly.express as px
+
 
 # with open("service_account.json") as f:
 #     creds = json.load(f)
@@ -144,6 +146,7 @@ if submitted_01:
     total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
     attract_avg=pd.NamedAgg(column="attract", aggfunc="mean")
     ).reset_index().sort_values(by='score_age_avg', ascending = True)
+    groups['score_age_avg_abs'] = abs(groups['score_age_avg'])
 
     # gather data which score_age_avg close to 0.
     groups_below_0 = groups[groups['score_age_avg']<=0].sort_values(by='score_age_avg', ascending=False).head(1)
@@ -153,6 +156,18 @@ if submitted_01:
     st.bar_chart(groups,
     x='groups', y='score_age_avg', stack=False, sort='score_age_avg',horizontal=True)
     st.write(groups)
+
+    # Create histogram
+    pic_class = exp.groupby(['pic']).agg(
+    score_age_avg=pd.NamedAgg(column="res_age", aggfunc="mean"),
+    total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
+    attract_avg=pd.NamedAgg(column="attract", aggfunc="mean")
+    ).reset_index().sort_values(by='score_age_avg', ascending = True)
+    pic_class['score_age_avg_abs'] = abs(pic_class['score_age_avg'])
+    st.write(pic_class)
+    
+    # st.plotly_chart(px.histogram(pic_class,
+    # x="score_age_avg_abs", nbins=30, title="Interactive Histogram"))
 
     group_race_age = exp[exp['groups']==groups_0.iloc[0,0]].groupby(['groups','actual_race','actual_age']).agg(
     attract_avg=pd.NamedAgg(column="attract", aggfunc="mean"),
@@ -170,4 +185,6 @@ P-Value     : {p_value:.4f}
 
     # st.bar_chart(group_race_age,
     # x='groups', y='attract_avg', stack=False, sort='-attract_avg',horizontal=True)
-    st.write(group_race_age.sort_values(by='score_age_avg_abs', ascending = True))
+    st.write(group_race_age[['groups', 'actual_race', 'actual_age', 'attract_avg', 'score_age_avg_abs']].sort_values(by='score_age_avg_abs', ascending = True))
+    # st.plotly_chart(px.histogram(group_race_age,
+    # x="score_age_avg_abs", nbins=30, title="Interactive Histogram"))
