@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from utils.path_helper import from_root
+from scipy import stats
+import plotly.figure_factory as ff
 
 # with open("service_account.json") as f:
 #     creds = json.load(f)
@@ -146,11 +148,10 @@ if submitted_01:
     # gather data which score_age_avg close to 0.
     groups_below_0 = groups[groups['score_age_avg']<=0].sort_values(by='score_age_avg', ascending=False).head(1)
     groups_below_0['score_age_avg'] = abs(groups_below_0['score_age_avg'])
-    groups_above_0 = groups[groups['score_age_avg']>=0].sort_values(by='score_age_avg', ascending=True).head(1)
+    groups_above_0 = groups[groups['score_age_avg']>0].sort_values(by='score_age_avg', ascending=True).head(1)
     groups_0 = pd.concat([groups_below_0,groups_above_0]).sort_values(by='score_age_avg', ascending=True)
-
     st.bar_chart(groups,
-    x='groups', y='score_age_avg', stack=False, sort='-score_age_avg',horizontal=True)
+    x='groups', y='score_age_avg', stack=False, sort='score_age_avg',horizontal=True)
     st.write(groups)
 
     group_race_age = exp[exp['groups']==groups_0.iloc[0,0]].groupby(['groups','actual_race','actual_age']).agg(
@@ -158,7 +159,15 @@ if submitted_01:
     total_appeared=pd.NamedAgg(column="pic", aggfunc="count"),
     score_age_avg=pd.NamedAgg(column="res_age", aggfunc="mean"),
     ).reset_index().sort_values(by='attract_avg', ascending = False)
+    group_race_age['score_age_avg_abs'] = abs(group_race_age['score_age_avg'])
+
+    pm=5
+    t_stat, p_value = stats.ttest_1samp(group_race_age['attract_avg'], popmean=pm)
+    st.write(f"""T-Test Results: using population mean = {pm}\n
+T-Statistic : {t_stat:.4f}\n
+P-Value     : {p_value:.4f}
+""")
 
     # st.bar_chart(group_race_age,
     # x='groups', y='attract_avg', stack=False, sort='-attract_avg',horizontal=True)
-    st.write(group_race_age)
+    st.write(group_race_age.sort_values(by='score_age_avg_abs', ascending = True))
