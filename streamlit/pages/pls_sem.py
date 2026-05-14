@@ -1,3 +1,12 @@
+import streamlit as st
+import pandas as pd
+import numpy as np
+import statsmodels.api as sm
+import plotly.express as px
+import plotly.graph_objects as go
+from scipy import stats
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
 # ----------------------------------
 """
 PLS-SEM Analysis Dashboard
@@ -8,15 +17,6 @@ Model: TPB + MPA
 Mediators: PBC (between MPA & Behavior), Intention (between PBC & Behavior)
 """
 # ----------------------------------
-
-import pandas as pd
-import numpy as np
-import statsmodels.api as sm
-import streamlit as st
-import plotly.express as px
-import plotly.graph_objects as go
-from scipy import stats
-from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # ── Konstruk & indikatornya ───────────────────────────────────────────────────
 CONSTRUCT_ITEMS = {
