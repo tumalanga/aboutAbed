@@ -8,14 +8,14 @@ from scipy import stats
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # ----------------------------------
-"""
-PLS-SEM Analysis Dashboard
-Model: TPB + MPA
-  Path 1: MPA → PBC
-  Path 2: Attitude, SN, PBC → Intention
-  Path 3: Intention, MPA, PBC → Behavior
-Mediators: PBC (between MPA & Behavior), Intention (between PBC & Behavior)
-"""
+# """
+# PLS-SEM Analysis Dashboard
+# Model: TPB + MPA
+#   Path 1: MPA → PBC
+#   Path 2: Attitude, SN, PBC → Intention
+#   Path 3: Intention, MPA, PBC → Behavior
+# Mediators: PBC (between MPA & Behavior), Intention (between PBC & Behavior)
+# """
 # ----------------------------------
 
 # ── Konstruk & indikatornya ───────────────────────────────────────────────────
@@ -64,22 +64,22 @@ def _sig_label(p):
     return 'n.s.'
 
 def _color_vif(val):
-    try:
-        v = float(val)
-        if v < 3.3: return 'color: green; font-weight: bold'
-        if v < 5.0: return 'color: orange'
-        return 'color: red; font-weight: bold'
-    except:
-        return ''
+    # try:
+    v = float(val)
+    if v < 3.3: return 'color: green; font-weight: bold'
+    if v < 5.0: return 'color: orange'
+    return 'color: red; font-weight: bold'
+# except:
+    #     return ''
 
 def _color_loading(val):
-    try:
-        v = float(val)
-        if v >= 0.70: return 'color: green; font-weight: bold'
-        if v >= 0.50: return 'color: orange'
-        return 'color: red'
-    except:
-        return ''
+    # try:
+    v = float(val)
+    if v >= 0.70: return 'color: green; font-weight: bold'
+    if v >= 0.50: return 'color: orange'
+    return 'color: red'
+    # except:
+    #     return ''
 
 
 # --- 4. DESCRIPTIVE & CORRELATION ---
@@ -303,13 +303,13 @@ def render_validity_reliability(df, latent_scores):
     cr_df = pd.DataFrame(cr_rows).set_index('Construct')
 
     def _color_cr(val):
-        try:
-            v = float(val)
-            if v >= 0.90: return 'color: #1a7a1a; font-weight: bold'
-            if v >= 0.70: return 'color: green'
-            return 'color: red; font-weight: bold'
-        except:
-            return ''
+        # try:
+        v = float(val)
+        if v >= 0.90: return 'color: #1a7a1a; font-weight: bold'
+        if v >= 0.70: return 'color: green'
+        return 'color: red; font-weight: bold'
+        # except:
+        #     return ''
 
     st.dataframe(cr_df.style.map(_color_cr, subset=['CR']), use_container_width=True)
 
@@ -337,13 +337,13 @@ def render_validity_reliability(df, latent_scores):
     ave_df = pd.DataFrame(ave_rows).set_index('Construct')
 
     def _color_ave(val):
-        try:
-            v = float(val)
-            if v >= 0.70: return 'color: #1a7a1a; font-weight: bold'
-            if v >= 0.50: return 'color: green'
-            return 'color: red; font-weight: bold'
-        except:
-            return ''
+        # try:
+        v = float(val)
+        if v >= 0.70: return 'color: #1a7a1a; font-weight: bold'
+        if v >= 0.50: return 'color: green'
+        return 'color: red; font-weight: bold'
+        # except:
+        #     return ''
 
     st.dataframe(ave_df.style.map(_color_ave, subset=['AVE']), use_container_width=True)
 
@@ -568,10 +568,10 @@ def main():
             def _cs(val):
                 return 'color: #1a7a1a; font-weight: bold' if val in ['***','**','*'] else 'color: #999'
             def _cp(val):
-                try:
-                    return 'color: #cc0000; font-weight: bold' if float(val) < 0.05 else ''
-                except:
-                    return ''
+                # try:
+                return 'color: #cc0000; font-weight: bold' if float(val) < 0.05 else ''
+                # except:
+                #     return ''
             return df.style.map(_cs, subset=['Sig.']).map(_cp, subset=['P-Value'])
 
         st.subheader("Path Coefficients")
