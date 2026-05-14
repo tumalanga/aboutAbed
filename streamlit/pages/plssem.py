@@ -233,7 +233,6 @@ def run_pls_sem_logic(latent_scores):
 
     return pd.DataFrame(results), mediation_df, path1, path2, path3
 
-
 # --- 6. OUTER MODEL ---
 def render_outer_model(df, latent_scores):
     st.header("🔍 Outer Model — Indicator Loadings")
