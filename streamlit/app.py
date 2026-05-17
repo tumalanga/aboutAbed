@@ -62,23 +62,18 @@ project_3 = st.Page(
     title="Currency Converter"
 )
 
-project_4 = st.Page(
-    page="views/pls_sem.py",
-    title="PLS SEM"
-)
-
 project_x = st.Page(
     page="pages/pplres_1.py",
     title="Survey Report", visibility="hidden"
 )
 
-# project_s = st.Page(
-#     page="pages/pls_sem.py",
-#     title="Multivariate Analysis Report", visibility="hidden"
-# )
+project_s = st.Page(
+    page="pages/lr.py",
+    title="Mod CV", visibility="hidden"
+)
 
 pg = st.navigation({"info":[about_page],
-                    "Projects": [project_1, project_2, project_3, project_4],
-                    "others": [project_x]
+                    "Projects": [project_1, project_2, project_3],
+                    "others": [project_x, project_s]
                     })
 pg.run()

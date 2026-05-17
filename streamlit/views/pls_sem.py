@@ -20,7 +20,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # ── Konstruk & indikatornya ───────────────────────────────────────────────────
 CONSTRUCT_ITEMS = {
-    'MPA':       ['usage_general', 'usage_calling', 'usage_texting', 'usage_socmed', 'usage_music'],
+    'MPA':       ['usage_general', 'usage_calling', 'usage_texting', 'usage_socmed'],
     'Attitude':  ['safety', 'enjoyable', 'usefulness', 'acceptable'],
     'SN':        ['social_approval', 'social_pressure'],
     'PBC':       ['confident', 'control_ability', 'self_efficacy'],
@@ -534,7 +534,7 @@ def main():
        'How often do you use your smartphone for listening to music while walking?\n您常常在走路時使用手機聽音樂？  ']]
 
     df.columns = ['datetime', 'gender', 'age', 'education', 'avg_usage_smartphone_hours', 'walking', 'purpose', 'walk_using_smartphone', 'safety', 'enjoyable', 'usefulness', 'acceptable', 'social_approval', 'social_pressure', 'confident', 'control_ability', 'self_efficacy', 'future_intention', 'response_to_notification', 'social_complaint', 'excessive_use', 'anxiety_without_checking', 'dependency_feeling', 'productivity_loss', 'usage_general', 'usage_calling', 'usage_texting', 'usage_socmed', 'usage_music']
-    df_raw = df[df['walk_using_smartphone']=="Yes 是"].copy()
+    df_raw = df[df['walk_using_smartphone']=="Yes 是"].copy().drop(columns='usage_music')
     df_processed = preprocess_data(df_raw)
     latent_scores = compute_latent_scores(df_processed)
 
