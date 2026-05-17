@@ -701,13 +701,6 @@ python-slugify==8.0.4
     #   -r streamlit/reqs.txt
     #   kaggle
     #   pytest-playwright
-pywin32==311
-    # via jupyter-core
-pywinpty==3.0.3
-    # via
-    #   jupyter-server
-    #   jupyter-server-terminals
-    #   terminado
 pyyaml==6.0.2
     # via
     #   -r streamlit/reqs.txt
