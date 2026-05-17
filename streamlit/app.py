@@ -1,9 +1,6 @@
 # .\st\scripts\activate
 # streamlit run app.py
 
-# GA tracker
-import streamlit.components.v1 as components
-
 from pathlib import Path
 import streamlit as st
 from PIL import Image
