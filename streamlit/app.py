@@ -36,7 +36,7 @@ with open(css_path) as f, open(html_path) as r:
     st.markdown("<style>{}</style>".format(css), unsafe_allow_html=True)
     # ini untuk tracker
     html_code = r.read()
-    st.components.v1.html.html(html_code, height=0)
+    st.components.v1.html(html_code, height=0)
 
 about_page = st.Page(
     page="views/landing.py",
