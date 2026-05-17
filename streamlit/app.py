@@ -49,10 +49,10 @@ project_1 = st.Page(
     title="Quick Data Visualisation"
 )
 
-# project_2 = st.Page(
-#     page="views/yt.py",
-#     title="Youtube data"
-# )
+project_2 = st.Page(
+    page="views/yt.py",
+    title="Youtube data"
+)
 
 project_3 = st.Page(
     page="views/converter.py",
@@ -69,8 +69,13 @@ project_s = st.Page(
     title="Mod CV", visibility="hidden"
 )
 
+project_y = st.Page(
+    page="pages/pls_sem.py",
+    title="Mod CV", visibility="hidden"
+)
+
 pg = st.navigation({"info":[about_page],
-                    "Projects": [project_1, project_3],
-                    "others": [project_x, project_s]
+                    "Projects": [project_1, project_2, project_3],
+                    "others": [project_x, project_s, project_y]
                     })
 pg.run()
