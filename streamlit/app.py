@@ -69,13 +69,8 @@ project_s = st.Page(
     title="Mod CV", visibility="hidden"
 )
 
-project_y = st.Page(
-    page="pages/pls_sem.py",
-    title="Mod CV", visibility="hidden"
-)
-
 pg = st.navigation({"info":[about_page],
                     "Projects": [project_1, project_2, project_3],
-                    "others": [project_x, project_s, project_y]
+                    "others": [project_x, project_s]
                     })
 pg.run()
